@@ -6,3 +6,4 @@ pub mod not_found;
 pub mod json_display;
 
 pub mod model;
+pub mod components;

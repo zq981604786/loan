@@ -5,12 +5,14 @@ use js_sys::Promise;
 use wasm_bindgen_futures::JsFuture;
 
 use crate::cam::model::loan_record::LoanRecordVM;
+use crate::cam::components::calculate_dcm::ComponentCalculateDcm;
 
 #[function_component]
 pub fn Home() -> Html {
     html!{
         <>
             <UploadFile/>
+            <ComponentCalculateDcm/>
         </>
     }
 }
