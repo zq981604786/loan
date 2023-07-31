@@ -7,5 +7,8 @@ rm -rf ./dist
 trunk build --release
 
 # 拷贝编译生成的静态资源到部署目录
+git add .
+git commit -m "build vercel"
+git push
 #cp -r dist/. ./
 
