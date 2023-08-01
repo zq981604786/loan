@@ -20,7 +20,7 @@ pub fn Home() -> Html {
 
 enum Msg {
     Submit,
-    PromiseResult(String)
+    PromiseResult(String),
 }
 
 struct UploadFile {
@@ -43,9 +43,9 @@ impl Component for UploadFile{
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html!{
             <div>
-                <ComponentUpload/>
-                <input ref={self.file_input_ref.clone()} type="file" />
-                <button onclick={_ctx.link().callback(|_| Msg::Submit)}>{ "Upload" }</button>
+                <ComponentUpload on_change={_ctx.link().callback(Msg::PromiseResult)}/>
+                // <input ref={self.file_input_ref.clone()} type="file" />
+                // <button onclick={_ctx.link().callback(|_| Msg::Submit)}>{ "Upload" }</button>
                 <p>{ &self.content }</p>
                 {
                     match self.loan_record_vm{

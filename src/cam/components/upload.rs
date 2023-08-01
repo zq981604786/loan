@@ -1,3 +1,4 @@
+use clap::builder::Str;
 use yew::prelude::*;
 use web_sys::{HtmlInputElement};
 use gloo::console::log;
@@ -15,31 +16,19 @@ pub enum Msg {
     PromiseResult(String)
 }
 
+#[derive(Properties,PartialEq)]
+pub struct Props{
+    pub on_change:Callback<String>,
+}
+
 impl Component for ComponentUpload{
     type Message = Msg;
-    type Properties = ();
+    type Properties = Props;
 
     fn create(_ctx: &Context<Self>) -> Self {
-        // let on_change = _ctx.props().on_change.clone();
-        //
-        // let on_change_wrapper = Callback::from(move |value: String| {
-        //     on_change.emit(value);
-        // });
-
         Self{
             content: "".to_owned(),
             file_input_ref: NodeRef::default(),
-        }
-    }
-
-    fn view(&self, _ctx: &Context<Self>) -> Html {
-        html!{
-            <>
-                <div class="input-group mb-3">
-                  <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" ref={self.file_input_ref.clone()}/>
-                  <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onclick={_ctx.link().callback(|_| Msg::Submit)}>{"提交"}</button>
-                </div>
-            </>
         }
     }
 
@@ -66,9 +55,20 @@ impl Component for ComponentUpload{
                 true
             },
             Msg::PromiseResult(result)=>{
-                log!("res",result);
+                _ctx.props().on_change.emit(result);
                 true
             }
+        }
+    }
+
+    fn view(&self, _ctx: &Context<Self>) -> Html {
+        html!{
+            <>
+                <div class="input-group mb-3">
+                  <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" ref={self.file_input_ref.clone()}/>
+                  <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onclick={_ctx.link().callback(|_| Msg::Submit)}>{"提交"}</button>
+                </div>
+            </>
         }
     }
 }
