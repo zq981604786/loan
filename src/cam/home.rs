@@ -6,6 +6,7 @@ use wasm_bindgen_futures::JsFuture;
 
 use crate::cam::model::loan_record::LoanRecordVM;
 use crate::cam::components::calculate_dcm::ComponentCalculateDcm;
+use crate::cam::components::upload::ComponentUpload;
 
 #[function_component]
 pub fn Home() -> Html {
@@ -42,6 +43,7 @@ impl Component for UploadFile{
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html!{
             <div>
+                <ComponentUpload/>
                 <input ref={self.file_input_ref.clone()} type="file" />
                 <button onclick={_ctx.link().callback(|_| Msg::Submit)}>{ "Upload" }</button>
                 <p>{ &self.content }</p>
