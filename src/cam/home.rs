@@ -41,17 +41,24 @@ impl Component for UploadFile{
     }
 
     fn view(&self, _ctx: &Context<Self>) -> Html {
+        let loan = &self.loan_record_vm;
         html!{
             <div>
                 <ComponentUpload on_change={_ctx.link().callback(Msg::PromiseResult)}/>
-                <p>{ &self.content }</p>
+                // <p>{ &self.content }</p>
                 {
-                    match self.loan_record_vm{
-                    Some(_value) => html! { <p>{_value.ltv_rate}</p> },
+                    match loan{
+                    Some(_value) => html! {
+                        <>
+                            <p>{_value.ltv_rate}</p>
+                            <p>{_value.stablecoin_decoupling_ltv_rate}</p>
+                            <ComponentTable data={_value.interest_count_records.clone()} title={vec!["1".to_string()]}/>
+                        </>
+                    },
                     None => html! { <p>{"No Value"}</p> },
                      }
                 }
-                <ComponentTable data={vec![1,2,3]} title={vec!["1".to_string()]}/>
+                // <ComponentTable data={vec![1,2,3]} title={vec!["1".to_string()]}/>
                 <ComponentCalculateDcm/>
             </div>
         }
@@ -102,4 +109,8 @@ impl Component for UploadFile{
         println!("change");
         return false
     }
+}
+
+fn get_table_heard() {
+
 }

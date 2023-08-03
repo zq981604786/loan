@@ -18,8 +18,13 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 rust_decimal = "1.11"
 
+syn = "1.0"
+quote = "1.0"
+proc-macro2 = "1.0"
+
 
 
 [dependencies.web-sys]
 version = "0.3.64"
 features = ["console", "Element", "DomTokenList", "DomRect", "HtmlElement", "HtmlInputElement", "HtmlTextAreaElement", "CssStyleDeclaration", "MouseEvent", "IdbFactory", "IdbOpenDbRequest", "IdbRequest", "IdbTransaction", "IdbDatabase", "IdbObjectStore", "IdbIndex", "IdbTransactionMode", "IdbObjectStoreParameters", "IdbCursorWithValue", "IdbCursorDirection", "IdbKeyRange", "Navigator", "Headers", "Request", "RequestInit", "RequestMode", "Response"]
+

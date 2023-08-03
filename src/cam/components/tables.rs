@@ -2,11 +2,11 @@ use yew::prelude::*;
 use gloo::console::log;
 
 pub struct  ComponentTable{}
-
+use crate::cam::model::loan_interest_count_record::LoanInterestCountRecord;
 #[derive(Properties,PartialEq)]
 pub struct Props{
     pub title:Vec<String>,
-    pub data:Vec<i32>,
+    pub data:Vec<LoanInterestCountRecord>,
 }
 
 impl Component for ComponentTable {
@@ -18,7 +18,7 @@ impl Component for ComponentTable {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        let data = ctx.props().data.clone().iter();
+        // let data = ctx.props().data.clone().iter();
         html!{
             <table class="table">
                 <thead>
@@ -29,9 +29,9 @@ impl Component for ComponentTable {
                     })}
                 </thead>
                 <tbody class="table-group-divider">
-                    {for ctx.props().data.clone().iter().map(|item| html!{
+                    {for ctx.props().data.iter().map(|item| html!{
                         <tr>
-                            <th scope="col">{item}</th>
+                            <th scope="col">{item.id}</th>
                         </tr>
                     })}
                 </tbody>
