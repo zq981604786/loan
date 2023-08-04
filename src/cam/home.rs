@@ -8,6 +8,7 @@ use crate::cam::model::loan_record::LoanRecordVM;
 use crate::cam::components::calculate_dcm::ComponentCalculateDcm;
 use crate::cam::components::upload::ComponentUpload;
 use crate::cam::components::tables::ComponentTable;
+use crate::cam::components::nav::ComponentNav;
 
 #[function_component]
 pub fn Home() -> Html {
@@ -45,6 +46,7 @@ impl Component for UploadFile{
         html!{
             <div>
                 <ComponentUpload on_change={_ctx.link().callback(Msg::PromiseResult)}/>
+                <ComponentNav records={vec!["Active".to_string(),"Link1".to_string(),"Link2".to_string()]}/>
                 // <p>{ &self.content }</p>
                 {
                     match loan{

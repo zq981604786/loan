@@ -759,16 +759,22 @@ dependencies = [
  "clap",
  "gloo",
  "js-sys",
- "proc-macro2",
- "quote",
  "rust_decimal",
  "serde",
  "serde_json",
- "syn 1.0.109",
  "wasm-bindgen-futures",
  "web-sys",
  "yew",
  "yew-router",
+]
+
+[[package]]
+name = "loan-macros"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 1.0.109",
 ]
 
 [[package]]
