@@ -22,12 +22,14 @@ pub fn Home() -> Html {
 enum Msg {
     Submit,
     PromiseResult(String),
+    ChangeNav(String),
 }
 
 struct UploadFile {
     content: String,
     file_input_ref: NodeRef,
     loan_record_vm: Option<LoanRecordVM>,
+    current_nav:String,
 }
 impl Component for UploadFile{
     type Message = Msg;
@@ -38,6 +40,7 @@ impl Component for UploadFile{
             content: "".to_owned(),
             file_input_ref: NodeRef::default(),
             loan_record_vm: None,
+            current_nav:"".to_string(),
         }
     }
 
@@ -46,7 +49,8 @@ impl Component for UploadFile{
         html!{
             <div>
                 <ComponentUpload on_change={_ctx.link().callback(Msg::PromiseResult)}/>
-                <ComponentNav records={vec!["Active".to_string(),"Link1".to_string(),"Link2".to_string()]}/>
+                <ComponentNav records={vec!["Active".to_string(),"Link1".to_string(),"Link2".to_string()]}
+                on_change={_ctx.link().callback(Msg::ChangeNav)}/>
                 // <p>{ &self.content }</p>
                 {
                     match loan{
@@ -60,7 +64,17 @@ impl Component for UploadFile{
                     None => html! { <p>{"No Value"}</p> },
                      }
                 }
-                // <ComponentTable data={vec![1,2,3]} title={vec!["1".to_string()]}/>
+                {
+                    { if self.current_nav == "Link1" {
+                        html! { <>
+                            <p>{"zzzzz"}</p>
+                        </> }
+                    } else {
+                        html! { <>
+                            <p>{"Other content"}</p>
+                        </> }
+                    } }
+                }
                 <ComponentCalculateDcm/>
             </div>
         }
@@ -68,7 +82,6 @@ impl Component for UploadFile{
 
     fn rendered(&mut self, _ctx: &Context<Self>, first_render: bool) {
         if first_render{
-            log!("first rendered")
         }
     }
 
@@ -95,7 +108,6 @@ impl Component for UploadFile{
                 true
             },
             Msg::PromiseResult(result)=>{
-                // self.content = result.clone();
                 let loan:crate::cam::model::loan_record::LoanRecordVM = serde_json::from_str(result.as_str()).unwrap();
                 let json = serde_json::to_string(&loan).unwrap();
                 self.content = json;
@@ -103,6 +115,11 @@ impl Component for UploadFile{
                 log!("loan");
                 true
             },
+            Msg::ChangeNav(nav)=>{
+                self.current_nav = nav.clone();
+                log!("nav",nav);
+                true
+            }
         }
     }
 
