@@ -64,7 +64,7 @@ impl Component for ComponentUpload{
     fn view(&self, _ctx: &Context<Self>) -> Html {
         html!{
             <>
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" style="padding:10px">
                   <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" ref={self.file_input_ref.clone()}/>
                   <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onclick={_ctx.link().callback(|_| Msg::Submit)}>{"提交"}</button>
                 </div>

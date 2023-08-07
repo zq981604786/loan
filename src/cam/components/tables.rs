@@ -19,27 +19,29 @@ impl Component for ComponentTable {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html!{
-            <table class="table">
-                <thead>
-                    <tr>
-                        {for ctx.props().title.clone().iter().map(|item| html!{
-                            <th scope="col">{item}</th>
-                        })}
-                    </tr>
-                </thead>
-                <tbody class="table-group-divider">
-                    {
-                        for ctx.props().data.iter().map(|item| html!{
-                            <tr>
-                                {for item.iter().map(|item| html!{
-                                    <th scope="col">{item}</th>
-                                })}
-                            </tr>
-                        })
-                    }
+            <div style="overflow-x:auto;">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            {for ctx.props().title.clone().iter().map(|item| html!{
+                                <th scope="col">{item}</th>
+                            })}
+                        </tr>
+                    </thead>
+                    <tbody class="table-group-divider">
+                        {
+                            for ctx.props().data.iter().map(|item| html!{
+                                <tr>
+                                    {for item.iter().map(|item| html!{
+                                        <th scope="col">{item}</th>
+                                    })}
+                                </tr>
+                            })
+                        }
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         }
     }
 }

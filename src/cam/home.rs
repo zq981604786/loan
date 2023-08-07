@@ -49,7 +49,7 @@ impl Component for UploadFile{
     fn view(&self, _ctx: &Context<Self>) -> Html {
         let loan = &self.loan_record_vm;
         html!{
-            <div>
+            <div class="container" style="overflow-x: auto;">
                 <ComponentUpload on_change={_ctx.link().callback(Msg::PromiseResult)}/>
                 <ComponentNav records={vec!["Active".to_string(),"Link1".to_string(),"Link2".to_string()]}
                 on_change={_ctx.link().callback(Msg::ChangeNav)}/>
