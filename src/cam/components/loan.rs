@@ -4,11 +4,17 @@ use gloo::console::log;
 use js_sys::Promise;
 use wasm_bindgen_futures::JsFuture;
 
-use crate::cam::model::{loan_record::LoanRecordVM,loan_interest_count_record::LoanInterestCountRecord};
-use crate::cam::components::calculate_dcm::ComponentCalculateDcm;
-use crate::cam::components::upload::ComponentUpload;
-use crate::cam::components::tables::ComponentTable;
-use crate::cam::components::nav::ComponentNav;
+use crate::cam::model::{
+    loan_record::LoanRecordVM,
+    loan_interest_count_record::LoanInterestCountRecord,
+    business_flow::LoanBusinessFlow
+};
+use crate::cam::components::{
+    calculate_dcm::ComponentCalculateDcm,
+    upload::ComponentUpload,
+    tables::ComponentTable,
+    nav::ComponentNav,
+};
 
 use crate::utils::util::{print_fields,to_2d_vec};
 
@@ -25,6 +31,7 @@ pub struct ComponentLoan {
     loan_record_vm: Option<LoanRecordVM>,
     current_nav:String,
 }
+
 impl Component for ComponentLoan{
     type Message = Msg;
     type Properties = ();
@@ -85,34 +92,39 @@ impl Component for ComponentLoan{
     fn view(&self, _ctx: &Context<Self>) -> Html {
         let loan = &self.loan_record_vm;
         html!{
-            <div class="container" style="overflow-x: auto;">
+            <div>
                 <ComponentUpload on_change={_ctx.link().callback(Msg::PromiseResult)}/>
-                <ComponentNav records={vec!["Active".to_string(),"Link1".to_string(),"Link2".to_string()]}
-                on_change={_ctx.link().callback(Msg::ChangeNav)}/>
+                // <ComponentNav records={vec!["Active".to_string(),"Link1".to_string(),"Link2".to_string()]}
+                // on_change={_ctx.link().callback(Msg::ChangeNav)}/>
                 {
                     match loan{
                     Some(_value) => html! {
                         <>
+                            <ComponentNav records={get_repay_type_nav(_value.loan_record.extra.repay_type.clone())}
+                                        on_change={_ctx.link().callback(Msg::ChangeNav)}/>
+
                             <p>{_value.ltv_rate}</p>
+                            // <p>{&_value.loan_record.extra.repay_type}</p>
                             <p>{_value.stablecoin_decoupling_ltv_rate}</p>
                             <ComponentTable data={to_2d_vec(_value.interest_count_records.clone())} title={print_fields::<LoanInterestCountRecord>()}/>
+                            <ComponentTable data={to_2d_vec(_value.business_flows.clone())} title={print_fields::<LoanBusinessFlow>()}/>
                         </>
                     },
-                    None => html! { <p>{"No Value"}</p> },
+                    None => html! {},
                      }
                 }
-                {
-                    { if self.current_nav == "Link1" {
-                        html! { <>
-                            <p>{"zzzzz"}</p>
-                        </> }
-                    } else {
-                        html! { <>
-                            <p>{"Other content"}</p>
-                        </> }
-                    } }
-                }
-                <ComponentCalculateDcm/>
+                // {
+                //     { if self.current_nav == "Link1" {
+                //         html! { <>
+                //             <p>{"zzzzz"}</p>
+                //         </> }
+                //     } else {
+                //         html! { <>
+                //             <p>{"Other content"}</p>
+                //         </> }
+                //     } }
+                // }
+                // <ComponentCalculateDcm/>
             </div>
         }
     }
@@ -121,4 +133,28 @@ impl Component for ComponentLoan{
         if first_render{
         }
     }
+}
+
+fn get_repay_type_nav(repay_type:String) -> Vec<String>{
+    let monthly = "monthly-repay-interest".to_string();
+    if repay_type == monthly{
+        return vec![
+            "利息计提".to_string(),
+            "业务日志".to_string(),
+        ]
+    }
+
+    return vec![
+        "利息计提".to_string(),
+        "业务日志".to_string(),
+    ]
+}
+
+#[test]
+fn test_get_repay_type_nav(){
+    let result = get_repay_type_nav("".to_string());
+    eprintln!("{:?}",result);
+
+    let result = get_repay_type_nav("monthly-repay-interest".to_string());
+    eprintln!("{:?}",result)
 }
