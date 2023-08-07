@@ -140,3 +140,42 @@ pub fn fields_to_vec(input: TokenStream) -> TokenStream {
 
     TokenStream::from(expanded)
 }
+
+#[proc_macro_derive(To2DVec)]
+pub fn to_2d_vec(input: TokenStream) -> TokenStream {
+
+    let input = parse_macro_input!(input as DeriveInput);
+    let struct_name = input.ident;
+
+    let fields = match input.data {
+        Data::Struct(data) => {
+            if let Fields::Named(fields) = data.fields {
+                fields.named
+            } else {
+                panic!("Only named fields supported");
+            }
+        },
+        _ => panic!("Only structs supported"),
+    };
+
+    let field_names: Vec<_> = fields
+        .iter()
+        .map(|f| f.ident.as_ref().unwrap())
+        .collect();
+
+    let field_values = field_names.iter().map(|name| {
+        quote! {
+            vec![self.#name.to_string()]
+        }
+    });
+
+    let expanded = quote! {
+        impl #struct_name {
+            fn to_2d_vec(&self) -> Vec<Vec<String>> {
+                vec![#(&#field_values),*]
+            }
+        }
+    };
+
+    TokenStream::from(expanded)
+}

@@ -1,9 +1,9 @@
 use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
-use loan_macros::{GetStructFields};
-use loan_trait::{GetStructFieldsTrait};
+use loan_macros::{GetStructFields,FieldsToVec};
+use loan_trait::{GetStructFieldsTrait,ToVecTrait};
 
-#[derive(Debug, Deserialize, Default, Serialize,PartialEq,Clone,GetStructFields)]
+#[derive(Debug, Deserialize, Default, Serialize,PartialEq,Clone,GetStructFields,FieldsToVec)]
 pub struct LoanInterestCountRecord {
     pub id: i64,
     rsc_name: String,

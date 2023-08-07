@@ -1,5 +1,5 @@
 use std::fmt::{Display, Formatter};
-use loan_macros::{GetStructFields,FieldsToVec};
+use loan_macros::{GetStructFields,FieldsToVec,To2DVec};
 use loan_trait::{GetStructFieldsTrait};
 // #[test]
 // fn test_macro(){
@@ -87,4 +87,28 @@ fn test_get_struct_value1(){
     for item in array {
         println!("{}", item);
     }
+}
+
+#[test]
+fn test_to_2d_vec() {
+    // #[derive(To2DVec)]
+    // struct TestStruct {
+    //     x: i32,
+    //     y: String,
+    //     z: bool
+    // }
+
+    // let test = TestStruct {
+    //     x: 1,
+    //     y: "hello".to_string(),
+    //     z: true
+    // };
+
+    //
+    // let expected = vec![
+    //     vec!["1".to_string()],
+    //     vec!["hello".to_string()],
+    //     vec!["true".to_string()]
+    // ];
+    // eprintln!("{:?}",expected)
 }

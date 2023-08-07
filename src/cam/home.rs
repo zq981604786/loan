@@ -10,7 +10,7 @@ use crate::cam::components::upload::ComponentUpload;
 use crate::cam::components::tables::ComponentTable;
 use crate::cam::components::nav::ComponentNav;
 
-use crate::utils::util::{print_fields};
+use crate::utils::util::{print_fields,to_2d_vec};
 
 #[function_component]
 pub fn Home() -> Html {
@@ -53,14 +53,13 @@ impl Component for UploadFile{
                 <ComponentUpload on_change={_ctx.link().callback(Msg::PromiseResult)}/>
                 <ComponentNav records={vec!["Active".to_string(),"Link1".to_string(),"Link2".to_string()]}
                 on_change={_ctx.link().callback(Msg::ChangeNav)}/>
-                // <p>{ &self.content }</p>
                 {
                     match loan{
                     Some(_value) => html! {
                         <>
                             <p>{_value.ltv_rate}</p>
                             <p>{_value.stablecoin_decoupling_ltv_rate}</p>
-                            <ComponentTable data={_value.interest_count_records.clone()} title={print_fields::<LoanInterestCountRecord>()}/>
+                            <ComponentTable data={to_2d_vec(_value.interest_count_records.clone())} title={print_fields::<LoanInterestCountRecord>()}/>
                         </>
                     },
                     None => html! { <p>{"No Value"}</p> },

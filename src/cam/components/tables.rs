@@ -6,7 +6,7 @@ use crate::cam::model::loan_interest_count_record::LoanInterestCountRecord;
 #[derive(Properties,PartialEq)]
 pub struct Props{
     pub title:Vec<String>,
-    pub data:Vec<LoanInterestCountRecord>,
+    pub data:Vec<Vec<String>>,
 }
 
 impl Component for ComponentTable {
@@ -28,11 +28,16 @@ impl Component for ComponentTable {
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                    <tr>
-                        {for ctx.props().data.iter().map(|item| html!{
-                            <th scope="col">{item.id}</th>
-                        })}
-                    </tr>
+                    {
+                        for ctx.props().data.iter().map(|item| html!{
+                            <tr>
+                                {for item.iter().map(|item| html!{
+                                    <th scope="col">{item}</th>
+                                })}
+                            </tr>
+                        })
+                    }
+
                 </tbody>
             </table>
         }
