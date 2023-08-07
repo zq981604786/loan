@@ -1,14 +1,101 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+// use proc_macro::TokenStream;
+// use syn::{parse_macro_input,AttributeArgs};
 
-#[cfg(test)]
-mod tests {
-    use super::*;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
+
+// #[proc_macro_attribute]
+// pub fn my_first_attribute_proc_macro(attr:TokenStream,item:TokenStream) ->TokenStream{
+//     eprintln!("-------attr部分-------");
+//     eprintln!("{:#?}",attr);
+//     eprintln!("-------item部分-------");
+//     eprintln!("{:#?}",item);
+//     item
+// }
+
+
+
+// ident:匹配一个标识符(identifier),如变量名、函数名等。
+// expr:匹配一个表达式。
+// ty:匹配一个类型。
+// pat:匹配一个模式,如结构体字段。
+// tt:匹配一个 token tree,可以是任意语法单元。
+// item:匹配一个代码项(item),如函数、结构体等。
+// block:匹配一个代码块。
+// stmt:匹配一个语句。
+// path:匹配一个路径。
+// meta:匹配一个属性。
+// lifetime:匹配一个生命周期参数。
+// vis:匹配一个可见性参数,如 pub。
+//
+// #[macro_export]
+// macro_rules! get_struct_fields {
+//   ($struct:ty)=> (
+//       ((eprintln!("hello {:?}", $struct)));
+//
+//        (let fileds = Vec::new(); fileds)
+//   )
+// }
+
+
+// use proc_macro::TokenStream;
+// use quote::{quote, ToTokens};
+// use syn::{parse_macro_input, Data, DeriveInput, Fields};
+//
+// #[proc_macro]
+// pub fn get_struct_fields(input: TokenStream) -> TokenStream {
+//     let ast: DeriveInput = parse_macro_input!(input);
+//
+//     let struct_name = &ast.ident;
+//
+//     let field_names = if let Data::Struct(data_struct) = ast.data {
+//         if let Fields::Named(fields) = data_struct.fields {
+//             fields.named.iter().map(|field| field.ident.as_ref().unwrap().to_token_stream()).collect::<Vec<_>>()
+//         } else {
+//             Vec::new()
+//         }
+//     } else {
+//         Vec::new()
+//     };
+//
+//     let expanded = quote! {
+//         impl #struct_name {
+//             fn get_fields() -> Vec<&'static str> {
+//                 vec![#(stringify!(#field_names)),*]
+//             }
+//         }
+//     };
+//
+//     expanded.into()
+// }
+
+
+use proc_macro::TokenStream;
+use quote::quote;
+use syn::{parse_macro_input, Data, DeriveInput, Fields};
+
+#[proc_macro_derive(GetStructFields)]
+pub fn get_struct_fields(input: TokenStream) -> TokenStream {
+    let ast: DeriveInput = parse_macro_input!(input);
+
+    let struct_name = &ast.ident;
+
+    let field_names = if let Data::Struct(data_struct) = &ast.data {
+        if let Fields::Named(fields) = &data_struct.fields {
+            fields.named.iter().map(|field| &field.ident).collect::<Vec<_>>()
+        } else {
+            Vec::new()
+        }
+    } else {
+        Vec::new()
+    };
+
+    let expanded = quote! {
+        impl #struct_name {
+            fn get_fields() -> Vec<&'static str> {
+                vec![#(stringify!(#field_names)),*]
+            }
+        }
+    };
+
+    expanded.into()
 }

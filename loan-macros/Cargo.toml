@@ -10,5 +10,11 @@ syn = "1.0"
 quote = "1.0"
 proc-macro2 = "1.0"
 
+
 [lib]
 proc-macro = true
+#crate-type = ["lib"]
+
+[[test]]
+name = "tests"
+path = "tests/test.rs"
