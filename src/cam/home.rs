@@ -4,11 +4,13 @@ use gloo::console::log;
 use js_sys::Promise;
 use wasm_bindgen_futures::JsFuture;
 
-use crate::cam::model::loan_record::LoanRecordVM;
+use crate::cam::model::{loan_record::LoanRecordVM,loan_interest_count_record::LoanInterestCountRecord};
 use crate::cam::components::calculate_dcm::ComponentCalculateDcm;
 use crate::cam::components::upload::ComponentUpload;
 use crate::cam::components::tables::ComponentTable;
 use crate::cam::components::nav::ComponentNav;
+
+use crate::utils::util::{print_fields};
 
 #[function_component]
 pub fn Home() -> Html {
@@ -58,7 +60,7 @@ impl Component for UploadFile{
                         <>
                             <p>{_value.ltv_rate}</p>
                             <p>{_value.stablecoin_decoupling_ltv_rate}</p>
-                            <ComponentTable data={_value.interest_count_records.clone()} title={vec!["1".to_string()]}/>
+                            <ComponentTable data={_value.interest_count_records.clone()} title={print_fields::<LoanInterestCountRecord>()}/>
                         </>
                     },
                     None => html! { <p>{"No Value"}</p> },

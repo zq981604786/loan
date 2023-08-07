@@ -1,6 +1,6 @@
 // use loan_macros::{my_first_attribute_proc_macro};
 use loan_macros::{GetStructFields};
-
+use loan_trait::{GetStructFieldsTrait};
 // #[test]
 // fn test_macro(){
 //     #[my_first_attribute_proc_macro("attr here")]
@@ -10,7 +10,7 @@ use loan_macros::{GetStructFields};
 
 #[test]
 fn test_macro1(){
-    #[derive(Debug,GetStructFields)]
+    #[derive(GetStructFields)]
     struct Person {
         name: String,
         age: u32

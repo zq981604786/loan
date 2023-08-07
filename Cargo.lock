@@ -760,6 +760,7 @@ dependencies = [
  "gloo",
  "js-sys",
  "loan-macros",
+ "loan-trait",
  "rust_decimal",
  "serde",
  "serde_json",
@@ -773,10 +774,15 @@ dependencies = [
 name = "loan-macros"
 version = "0.1.0"
 dependencies = [
+ "loan-trait",
  "proc-macro2",
  "quote",
  "syn 1.0.109",
 ]
+
+[[package]]
+name = "loan-trait"
+version = "0.1.0"
 
 [[package]]
 name = "log"

@@ -22,11 +22,11 @@ impl Component for ComponentTable {
         html!{
             <table class="table">
                 <thead>
-                    {for ctx.props().title.clone().iter().map(|item| html!{
-                        <tr>
+                    <tr>
+                        {for ctx.props().title.clone().iter().map(|item| html!{
                             <th scope="col">{item}</th>
-                        </tr>
-                    })}
+                        })}
+                    </tr>
                 </thead>
                 <tbody class="table-group-divider">
                     {for ctx.props().data.iter().map(|item| html!{

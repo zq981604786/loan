@@ -68,10 +68,10 @@
 //     expanded.into()
 // }
 
-
 use proc_macro::TokenStream;
 use quote::quote;
 use syn::{parse_macro_input, Data, DeriveInput, Fields};
+
 
 #[proc_macro_derive(GetStructFields)]
 pub fn get_struct_fields(input: TokenStream) -> TokenStream {
@@ -88,11 +88,14 @@ pub fn get_struct_fields(input: TokenStream) -> TokenStream {
     } else {
         Vec::new()
     };
-
+    let trait_path = quote!(GetStructFieldsTrait);
     let expanded = quote! {
-        impl #struct_name {
-            fn get_fields() -> Vec<&'static str> {
-                vec![#(stringify!(#field_names)),*]
+        impl #trait_path for #struct_name {
+            // fn get_fields() -> Vec<&'static str> {
+            //     vec![#(stringify!(#field_names)),*]
+            // }
+            fn get_fields() -> Vec<String> {
+                vec![#(stringify!(#field_names).to_owned()),*]
             }
         }
     };
