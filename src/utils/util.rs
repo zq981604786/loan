@@ -1,5 +1,5 @@
-use loan_macros::{GetStructFields};
-use loan_trait::{GetStructFieldsTrait};
+use loan_macros::{GetStructFields,FieldsToVec};
+use loan_trait::{GetStructFieldsTrait,ToVecTrait};
 
 pub fn print_fields<T: GetStructFieldsTrait>() -> Vec<String>{
     T::get_fields()

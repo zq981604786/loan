@@ -91,9 +91,6 @@ pub fn get_struct_fields(input: TokenStream) -> TokenStream {
     let trait_path = quote!(GetStructFieldsTrait);
     let expanded = quote! {
         impl #trait_path for #struct_name {
-            // fn get_fields() -> Vec<&'static str> {
-            //     vec![#(stringify!(#field_names)),*]
-            // }
             fn get_fields() -> Vec<String> {
                 vec![#(stringify!(#field_names).to_owned()),*]
             }
@@ -101,4 +98,45 @@ pub fn get_struct_fields(input: TokenStream) -> TokenStream {
     };
 
     expanded.into()
+}
+
+#[proc_macro_derive(FieldsToVec)]
+pub fn fields_to_vec(input: TokenStream) -> TokenStream {
+    // 解析输入的 TokenStream 为 DeriveInput
+    let input = parse_macro_input!(input as DeriveInput);
+
+    // 获取结构体的名称和字段
+    let struct_name = input.ident;
+    let fields = match input.data {
+        Data::Struct(data) => {
+            if let Fields::Named(fields) = data.fields {
+                fields.named
+            } else {
+                panic!("Only named fields are supported");
+            }
+        }
+        _ => panic!("Only structs are supported"),
+    };
+
+    // 构建转换为数组的代码
+    let field_names = fields
+        .iter()
+        .map(|field| field.ident.as_ref().unwrap())
+        .collect::<Vec<_>>();
+    let field_values = field_names.iter().map(|name| {
+        quote! {
+            self.#name.to_string()
+        }
+    });
+
+    let trait_path = quote!(ToVecTrait);
+    let expanded = quote! {
+        impl #trait_path for #struct_name {
+             fn to_vec(&self) -> Vec<String> {
+                vec![#(#field_values),*]
+            }
+        }
+    };
+
+    TokenStream::from(expanded)
 }

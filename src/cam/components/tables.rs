@@ -18,7 +18,6 @@ impl Component for ComponentTable {
     }
 
     fn view(&self, ctx: &Context<Self>) -> Html {
-        // let data = ctx.props().data.clone().iter();
         html!{
             <table class="table">
                 <thead>
@@ -29,11 +28,11 @@ impl Component for ComponentTable {
                     </tr>
                 </thead>
                 <tbody class="table-group-divider">
-                    {for ctx.props().data.iter().map(|item| html!{
-                        <tr>
+                    <tr>
+                        {for ctx.props().data.iter().map(|item| html!{
                             <th scope="col">{item.id}</th>
-                        </tr>
-                    })}
+                        })}
+                    </tr>
                 </tbody>
             </table>
         }
