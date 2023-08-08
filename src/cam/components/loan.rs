@@ -7,7 +7,8 @@ use wasm_bindgen_futures::JsFuture;
 use crate::cam::model::{
     loan_record::LoanRecordVM,
     loan_interest_count_record::LoanInterestCountRecord,
-    business_flow::LoanBusinessFlow
+    business_flow::LoanBusinessFlow,
+    base::LoanType,
 };
 use crate::cam::components::{
     calculate_dcm::ComponentCalculateDcm,
@@ -41,7 +42,7 @@ impl Component for ComponentLoan{
             content: "".to_owned(),
             file_input_ref: NodeRef::default(),
             loan_record_vm: None,
-            current_nav:"".to_string(),
+            current_nav:"利息计提".to_string(),
         }
     }
 
@@ -94,37 +95,34 @@ impl Component for ComponentLoan{
         html!{
             <div>
                 <ComponentUpload on_change={_ctx.link().callback(Msg::PromiseResult)}/>
-                // <ComponentNav records={vec!["Active".to_string(),"Link1".to_string(),"Link2".to_string()]}
-                // on_change={_ctx.link().callback(Msg::ChangeNav)}/>
                 {
                     match loan{
                     Some(_value) => html! {
                         <>
                             <ComponentNav records={get_repay_type_nav(_value.loan_record.extra.repay_type.clone())}
                                         on_change={_ctx.link().callback(Msg::ChangeNav)}/>
-
+                            {
+                                {if self.current_nav == "利息计提" {
+                                    html!{
+                                        <ComponentTable data={to_2d_vec(_value.interest_count_records.clone())} title={print_fields::<LoanInterestCountRecord>()}/>
+                                    }
+                                }else if self.current_nav == "业务日志" {
+                                    html!{
+                                        <ComponentTable data={to_2d_vec(_value.business_flows.clone())} title={print_fields::<LoanBusinessFlow>()}/>
+                                    }
+                                }else{
+                                    html!{
+                                        <p>{"NOT FOUND"}</p>
+                                    }
+                                }}
+                            }
                             <p>{_value.ltv_rate}</p>
-                            // <p>{&_value.loan_record.extra.repay_type}</p>
                             <p>{_value.stablecoin_decoupling_ltv_rate}</p>
-                            <ComponentTable data={to_2d_vec(_value.interest_count_records.clone())} title={print_fields::<LoanInterestCountRecord>()}/>
-                            <ComponentTable data={to_2d_vec(_value.business_flows.clone())} title={print_fields::<LoanBusinessFlow>()}/>
                         </>
                     },
                     None => html! {},
                      }
                 }
-                // {
-                //     { if self.current_nav == "Link1" {
-                //         html! { <>
-                //             <p>{"zzzzz"}</p>
-                //         </> }
-                //     } else {
-                //         html! { <>
-                //             <p>{"Other content"}</p>
-                //         </> }
-                //     } }
-                // }
-                // <ComponentCalculateDcm/>
             </div>
         }
     }
@@ -136,18 +134,69 @@ impl Component for ComponentLoan{
 }
 
 fn get_repay_type_nav(repay_type:String) -> Vec<String>{
-    let monthly = "monthly-repay-interest".to_string();
-    if repay_type == monthly{
+    if repay_type == LoanType::MonthlyRepayInterest.to_string(){
         return vec![
-            "利息计提".to_string(),
+            "定期付息计划".to_string(),
+            "最新质押物信息".to_string(),
+            "利息变动记录".to_string(),
+            "质押信息变动记录".to_string(),
+            "本金变动记录".to_string(),
+            "期限调整记录".to_string(),
+            "管理费记录".to_string(),
+            "利息计提记录".to_string(),
+            "资金变动记录".to_string(),
             "业务日志".to_string(),
+            "附件".to_string(),
         ]
     }
 
-    return vec![
-        "利息计提".to_string(),
-        "业务日志".to_string(),
-    ]
+    if repay_type == LoanType::OneTimeRepay.to_string(){
+        return vec![
+            "最新质押物信息".to_string(),
+            "利息变动记录".to_string(),
+            "质押信息变动记录".to_string(),
+            "本金变动记录".to_string(),
+            "期限调整记录".to_string(),
+            "管理费记录".to_string(),
+            "利息计提记录".to_string(),
+            "资金变动记录".to_string(),
+            "业务日志".to_string(),
+            "附件".to_string(),
+        ]
+    }
+
+    if repay_type == LoanType::MatchingService.to_string() || repay_type == LoanType::MatchingRepayment.to_string(){
+        return vec![
+            "还本付息计划".to_string(),
+            "最新质押物信息".to_string(),
+            "还本付息记录".to_string(),
+            "质押信息变动记录".to_string(),
+            "管理费记录".to_string(),
+            "利息计提记录".to_string(),
+            "资金变动记录".to_string(),
+            "业务日志".to_string(),
+            "附件".to_string(),
+        ]
+    }
+
+    if repay_type == LoanType::PeriodCompounding.to_string(){
+        return vec![
+            "复利计划".to_string(),
+            "最新质押物信息".to_string(),
+            "利息变动记录".to_string(),
+            "质押信息变动记录".to_string(),
+            "本金变动记录".to_string(),
+            "期限调整记录".to_string(),
+            "管理费记录".to_string(),
+            "利息计提记录".to_string(),
+            "利率调整记录".to_string(),
+            "资金变动记录".to_string(),
+            "业务日志".to_string(),
+            "附件".to_string(),
+        ]
+    }
+
+    return vec![]
 }
 
 #[test]

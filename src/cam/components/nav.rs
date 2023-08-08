@@ -59,8 +59,8 @@ impl Component for ComponentNav{
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         html!{
-            <>
-                <nav class="nav nav-pills nav-fill" ref={self.ul_ref.clone()}>
+            <div class="container-fluid">
+                <nav class="nav nav-pills nav-fill flex-column flex-md-row" ref={self.ul_ref.clone()}>
                 {for ctx.props().records.clone().iter().map(|item| {
                     let item_clone = Rc::new(item.clone());
                     let a_ref = NodeRef::default();
@@ -71,7 +71,7 @@ impl Component for ComponentNav{
                     }
                 })}
                 </nav>
-            </>
+            </div>
         }
     }
 
