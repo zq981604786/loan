@@ -15,7 +15,10 @@ use crate::cam::components::{
     upload::ComponentUpload,
     tables::ComponentTable,
     nav::ComponentNav,
+    components_loan::one_time_repay::ComponentOneTimeRepayLoan,
+    components_loan::utils::get_repay_type_nav,
 };
+
 
 use crate::utils::util::{print_fields,to_2d_vec};
 
@@ -95,6 +98,7 @@ impl Component for ComponentLoan{
         html!{
             <div>
                 <ComponentUpload on_change={_ctx.link().callback(Msg::PromiseResult)}/>
+                <ComponentOneTimeRepayLoan current_nav={self.current_nav.clone()}/>
                 {
                     match loan{
                     Some(_value) => html! {
@@ -133,77 +137,3 @@ impl Component for ComponentLoan{
     }
 }
 
-fn get_repay_type_nav(repay_type:String) -> Vec<String>{
-    if repay_type == LoanType::MonthlyRepayInterest.to_string(){
-        return vec![
-            "定期付息计划".to_string(),
-            "最新质押物信息".to_string(),
-            "利息变动记录".to_string(),
-            "质押信息变动记录".to_string(),
-            "本金变动记录".to_string(),
-            "期限调整记录".to_string(),
-            "管理费记录".to_string(),
-            "利息计提记录".to_string(),
-            "资金变动记录".to_string(),
-            "业务日志".to_string(),
-            "附件".to_string(),
-        ]
-    }
-
-    if repay_type == LoanType::OneTimeRepay.to_string(){
-        return vec![
-            "最新质押物信息".to_string(),
-            "利息变动记录".to_string(),
-            "质押信息变动记录".to_string(),
-            "本金变动记录".to_string(),
-            "期限调整记录".to_string(),
-            "管理费记录".to_string(),
-            "利息计提记录".to_string(),
-            "资金变动记录".to_string(),
-            "业务日志".to_string(),
-            "附件".to_string(),
-        ]
-    }
-
-    if repay_type == LoanType::MatchingService.to_string() || repay_type == LoanType::MatchingRepayment.to_string(){
-        return vec![
-            "还本付息计划".to_string(),
-            "最新质押物信息".to_string(),
-            "还本付息记录".to_string(),
-            "质押信息变动记录".to_string(),
-            "管理费记录".to_string(),
-            "利息计提记录".to_string(),
-            "资金变动记录".to_string(),
-            "业务日志".to_string(),
-            "附件".to_string(),
-        ]
-    }
-
-    if repay_type == LoanType::PeriodCompounding.to_string(){
-        return vec![
-            "复利计划".to_string(),
-            "最新质押物信息".to_string(),
-            "利息变动记录".to_string(),
-            "质押信息变动记录".to_string(),
-            "本金变动记录".to_string(),
-            "期限调整记录".to_string(),
-            "管理费记录".to_string(),
-            "利息计提记录".to_string(),
-            "利率调整记录".to_string(),
-            "资金变动记录".to_string(),
-            "业务日志".to_string(),
-            "附件".to_string(),
-        ]
-    }
-
-    return vec![]
-}
-
-#[test]
-fn test_get_repay_type_nav(){
-    let result = get_repay_type_nav("".to_string());
-    eprintln!("{:?}",result);
-
-    let result = get_repay_type_nav("monthly-repay-interest".to_string());
-    eprintln!("{:?}",result)
-}
